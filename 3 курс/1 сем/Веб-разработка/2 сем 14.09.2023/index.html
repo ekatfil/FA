@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <script>
+      window.onload = () => {
+          // Восстанавливаем данные из localStorage при загрузке страницы
+          const inputs = document.querySelectorAll('input');
+          for (const input of inputs) {
+              input.value = localStorage[`input_${input.name}`] || '';
+              input.addEventListener('change', function () {
+                  // Сохраняем данные в localStorage при изменении полей ввода
+                  localStorage[`input_${this.name}`] = this.value;
+              });
+          }
+
+          const loginButton = document.querySelector('.btn-primary');
+          loginButton.addEventListener('click', function (event) {
+              event.preventDefault();
+
+              const emailInput = document.getElementById('email');
+              const passwordInput = document.getElementById('password');
+
+              if (!emailInput.checkValidity() || !passwordInput.checkValidity()) {
+                  alert('Пожалуйста, заполните форму корректно!');
+                  return;
+              }
+
+              const emailValue = emailInput.value;
+              const passwordValue = passwordInput.value;
+
+              // Получаем массив записей из localStorage
+              let userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+
+              // Проверяем, есть ли уже такие данные в массиве
+              const isDuplicate = userRecords.some(record => record.email === emailValue);
+
+              if (!isDuplicate) {
+                  // Добавляем новую запись в массив
+                  userRecords.push({ email: emailValue, password: passwordValue });
+
+                  // Сохраняем обновленный массив в localStorage
+                  localStorage.setItem('userRecords', JSON.stringify(userRecords));
+
+                  // Добавляем запись в таблицу
+                  const userTable = document.getElementById('userTable').querySelector('tbody');
+                  const newRow = document.createElement('tr');
+                  newRow.innerHTML = `
+                      <th>${emailValue}</th>
+                      <th>${passwordValue}</th>
+                      <th><button class="btn btn-success edit-button">Редактировать</button></th>
+                      <th><button class="btn btn-danger delete-button">Удалить</button></th>
+                  `;
+                  userTable.appendChild(newRow);
+
+                  emailInput.value = ''; // Очищаем поле email
+                  passwordInput.value = ''; // Очищаем поле password
+              }
+          });
+
+
+          // Восстанавливаем данные из localStorage при загрузке страницы
+          const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+          const userTable = document.getElementById('userTable').querySelector('tbody');
+
+          for (const record of userRecords) {
+              const newRow = document.createElement('tr');
+              newRow.innerHTML = `
+                  <th>${record.email}</th>
+                  <th>${record.password}</th>
+                  <th><button class="btn btn-success edit-button">Редактировать</button></th>
+                  <th><button class="btn btn-danger delete-button">Удалить</button></th>
+                  `;
+              userTable.appendChild(newRow);
+          }
+
+          // Функция проверки корректности email адреса
+          function isValidEmail(email) {
+              const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+              return emailRegex.test(email);
+          }
+
+
+          // Добавляем слушатель события для кнопок редактирования
+          const editButtons = document.querySelectorAll('.edit-button');
+          for (const button of editButtons) {
+              button.addEventListener('click', function () {
+                  const row = this.parentElement.parentElement;
+                  const emailCell = row.querySelector('td:first-child');
+                  const passwordCell = row.querySelector('td:nth-child(2)');
+
+                  const newEmail = prompt('Edit email:', emailCell.textContent);
+                  const newPassword = prompt('Edit password:', passwordCell.textContent);
+
+                  if (isValidEmail(newEmail)) {
+                      // Обновляем данные в ячейках
+                      emailCell.textContent = newEmail;
+                      passwordCell.textContent = newPassword;
+
+                      // Обновляем данные в localStorage
+                      const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+                      const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+                      userRecords[rowIndex].email = newEmail;
+                      userRecords[rowIndex].password = newPassword;
+                      localStorage.setItem('userRecords', JSON.stringify(userRecords));
+                  } else {
+                      alert('Некорректный email!');
+                  }
+              });
+          }
+
+          // Добавляем слушатель события для кнопок удаления
+          const deleteButtons = document.querySelectorAll('.delete-button');
+          for (const button of deleteButtons) {
+              button.addEventListener('click', function () {
+                  const row = this.parentElement.parentElement;
+                  const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+
+                  if (confirm('Подтвердите удаление записи')) {
+                      // Удаляем запись из таблицы
+                      row.remove();
+
+                      // Удаляем запись из localStorage
+                      const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+                      userRecords.splice(rowIndex, 1);
+                      localStorage.setItem('userRecords', JSON.stringify(userRecords));
+                  }
+              });
+          }
+
+      };
+
+  </script>
+
+
+  <script>
+    $(document).ready(function() {
+        $('#userTable').DataTable({
+            "columnDefs": [
+                { "targets": [0, 1, 2, 3], "searchable": false, "orderable": false, "visible": true },
+            ]
+        });
+    });
+
+  </script>
+
+</head>
+
+<body>
+  <div class="container p-4">
+
+    <div class="d-flex flex-column justify-content-center align-items-center text-white">
+      <h1>Филиппова Екатерина ПИ21-7</h1>
+      <h2>Сохранение данных в localstorage</h2>
+    </div>
+
+      <form class="mt-4">
+          <fieldset>
+              <legend>Вход в систему</legend>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" name="email" placeholder="Введите email" value="ekatfil@mail.ru" required>
+              </div>
+              <div class="mb-3">
+                  <label for="password" class="form-label">Пароль</label>
+                  <input type="password" id="password" class="form-control" name="password" placeholder="Введите пароль" value="12345678" required>
+              </div>
+            
+              <button href="#" type="submit" class="btn btn-primary">Вход</button>
+          </fieldset>
+      </form>
+  
+      <div class="mt-4">
+        <h2 class="mt-4 d-flex flex-column justify-content-center align-items-center text-white">Таблица пользователей</h2>
+        <table class="table" id="userTable">
+            <thead>
+              <tr>
+                <th scope="col">Email</th>
+                <th scope="col">Пароль</th>
+                <th scope="col">Редактирование</th>
+                <th scope="col">Удаление</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+      </div>
+
+  </div>
+
+
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Редактировать запись</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="editEmail" class="form-label">Email</label>
+            <input type="email" id="editEmail" class="form-control" placeholder="Введите новый email">
+          </div>
+          <div class="mb-3">
+            <label for="editPassword" class="form-label">Пароль</label>
+            <input type="password" id="editPassword" class="form-control" placeholder="Введите новый пароль">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary" id="saveChanges">Сохранить изменения</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  
+</body>
+</html>
+
+
+<style>
+  body {
+    background: linear-gradient(174deg, #FFAF64 4.63%, #EB00FF 95.61%) no-repeat;
+    height: 100%;
+    width: 100%;
+  }    
+</style>

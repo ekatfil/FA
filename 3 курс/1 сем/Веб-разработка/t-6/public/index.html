@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Финансовый университет</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <!-- Styles for DataTables Buttons -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.0/css/buttons.dataTables.min.css">
+
+    <!-- JS for DataTables Buttons and its features -->
+    <script src="https://cdn.datatables.net/buttons/2.2.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.2.0/js/buttons.html5.min.js"></script>
+
+
+    <script>
+      window.onload = () => {
+          // Восстанавливаем данные из localStorage при загрузке страницы
+          const inputs = document.querySelectorAll('input');
+          for (const input of inputs) {
+              input.value = localStorage[`input_${input.name}`] || '';
+              input.addEventListener('change', function () {
+                  // Сохраняем данные в localStorage при изменении полей ввода
+                  localStorage[`input_${this.name}`] = this.value;
+              });
+          }
+
+          const loginButton = document.querySelector('.btn-primary');
+          loginButton.addEventListener('click', function (event) {
+              event.preventDefault();
+
+              const nameInput = document.getElementById('name');
+              const lastnameInput = document.getElementById('lastname');
+              const emailInput = document.getElementById('email');
+              const passwordInput = document.getElementById('password');
+
+              const nameValue = nameInput.value;
+              const lastnameValue = lastnameInput.value;
+              const emailValue = emailInput.value;
+              const passwordValue = passwordInput.value;
+
+              // Получаем массив записей из localStorage
+              let userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+
+              // Проверяем, есть ли уже такие данные в массиве (только по email для простоты)
+              const isDuplicate = userRecords.some(record => record.email === emailValue);
+
+              if (!isDuplicate) {
+                  // Добавляем новую запись в массив
+                  userRecords.push({ name: nameValue, lastname: lastnameValue, email: emailValue, password: passwordValue });
+
+                  // Сохраняем обновленный массив в localStorage
+                  localStorage.setItem('userRecords', JSON.stringify(userRecords));
+
+                  // Добавляем запись в таблицу
+                  const userTable = document.getElementById('userTable').querySelector('tbody');
+                  const newRow = document.createElement('tr');
+                  newRow.innerHTML = `
+                      <th>${nameValue}</th>
+                      <th>${lastnameValue}</th>
+                      <th>${emailValue}</th>
+                      <th class="w-25"><button class="btn btn-success edit-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                    </svg></button></th>
+                    <th class="w-25"><button class="btn btn-danger delete-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                    </svg></button></th>
+                  `;
+                  userTable.appendChild(newRow);
+
+                  // Очистите поля после добавления
+                  nameInput.value = '';
+                  lastnameInput.value = '';
+                  emailInput.value = '';
+                  passwordInput.value = '';
+              }
+          });
+
+
+          // Восстанавливаем данные из localStorage при загрузке страницы
+          const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+          const userTable = document.getElementById('userTable').querySelector('tbody');
+
+          for (const record of userRecords) {
+              const newRow = document.createElement('tr');
+              newRow.innerHTML = `
+                  <th>${record.name}</th>
+                  <th>${record.lastname}</th>
+                  <th>${record.email}</th>
+                  <th class="w-25"><button class="btn btn-success edit-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg></button></th>
+                                  <th class="w-25"><button class="btn btn-danger delete-button"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                </svg></button></th>
+              `;
+              userTable.appendChild(newRow);
+          }
+
+          // Функция проверки корректности email адреса
+          function isValidEmail(email) {
+              const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+              return emailRegex.test(email);
+          }
+
+
+          // При клике на кнопку "Удалить" откройте модальное окно с подтверждением
+          document.addEventListener('click', function(event) {
+              if (event.target.classList.contains('delete-button')) {
+                  const row = event.target.closest('tr');
+                  const email = row.children[2].textContent;
+                  document.getElementById('deleteEmail').value = email; // сохраняем email в скрытое поле модального окна
+                  const modal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                  modal.show();
+              }
+          });
+
+          // При клике на кнопку "Подтвердить удаление" в модальном окне, удалите запись
+          document.getElementById('confirmDelete').addEventListener('click', function() {
+              const email = document.getElementById('deleteEmail').value;
+              deleteUser(email);
+              
+              // Удалите строку из таблицы
+              const rows = document.getElementById('userTable').querySelectorAll('tbody tr');
+              rows.forEach(row => {
+                  if (row.children[2].textContent === email) {
+                      row.remove();
+                  }
+              });
+              
+              const modal = bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal'));
+              modal.hide();
+          });
+
+          function deleteUser(email) {
+              const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+              const updatedRecords = userRecords.filter(record => record.email !== email);
+              localStorage.setItem('userRecords', JSON.stringify(updatedRecords));
+          }
+
+
+
+          // При клике на "Редактировать" загрузите данные в модальное окно
+          document.addEventListener('click', function(event) {
+              if (event.target.classList.contains('edit-button')) {
+                  const row = event.target.closest('tr');
+                  const email = row.children[2].textContent;
+                  loadEditModal(email);
+              }
+          });
+
+          function loadEditModal(email) {
+              const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+              const user = userRecords.find(record => record.email === email);
+              if (user) {
+                  document.getElementById('editingEmail').value = user.email;
+                  document.getElementById('editName').value = user.name;
+                  document.getElementById('editLastname').value = user.lastname;
+                  document.getElementById('editEmail').value = user.email;
+                  document.getElementById('editPassword').value = user.password;
+                  const modal = new bootstrap.Modal(document.getElementById('editModal'));
+                  modal.show();
+              }
+          }
+
+          // Сохраните изменения после редактирования в модальном окне
+          document.getElementById('saveEdit').addEventListener('click', function() {
+              const editingEmail = document.getElementById('editingEmail').value;
+              const editName = document.getElementById('editName').value;
+              const editLastname = document.getElementById('editLastname').value;
+              const editEmail = document.getElementById('editEmail').value;
+              const editPassword = document.getElementById('editPassword').value;
+
+              const userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+              const userIndex = userRecords.findIndex(record => record.email === editingEmail);
+              if (userIndex > -1) {
+                  userRecords[userIndex] = {
+                      name: editName,
+                      lastname: editLastname,
+                      email: editEmail,
+                  };
+                  localStorage.setItem('userRecords', JSON.stringify(userRecords));
+              }
+
+              // Обновите данные в таблице
+              const rows = document.getElementById('userTable').querySelectorAll('tbody tr');
+              rows.forEach(row => {
+                  if (row.children[2].textContent === editingEmail) {
+                      row.children[0].textContent = editName;
+                      row.children[1].textContent = editLastname;
+                      row.children[2].textContent = editEmail;
+                  }
+              });
+
+              const modal = bootstrap.Modal.getInstance(document.getElementById('editModal'));
+              modal.hide();
+          });
+
+      };
+
+  </script>
+
+
+  <script>
+    $(document).ready(function() {
+    // Шаг 1: Извлеките данные из localStorage
+    let userRecords = JSON.parse(localStorage.getItem('userRecords')) || [];
+    
+    // Шаг 2: Инициализируйте таблицу с помощью DataTables
+    const table = $('#userTable').DataTable({
+        data: userRecords,
+        columns: [
+            { data: 'name', title: 'Имя' },
+            { data: 'lastname', title: 'Фамилия' },
+            { data: 'email', title: 'Email' },
+            { title: 'Редактирование', defaultContent: '<button class="btn btn-success edit-button">Редактировать</button>' },
+            { title: 'Удаление', defaultContent: '<button class="btn btn-danger delete-button">Удалить</button>' }
+        ],
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                exportOptions: {
+                    rows: ':visible'  // Экспорт только видимых строк
+                }
+            }
+        ]
+    });
+    
+    // Далее, вы можете добавить события для кнопок "Редактировать" и "Удалить"
+    // ...
+});
+
+  </script>
+
+
+
+
+</head>
+
+<body>
+
+  <!-- Registrartion Modal -->
+  <div class="modal fade" id="reg-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Регистрация</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          <form id="userForm" class="mt-4">
+            <fieldset>
+                
+                <div class="mb-3">
+                  <label for="name" class="form-label">Имя</label>
+                  <input type="name" id="name" class="form-control" name="name" placeholder="Введите имя" required>
+                </div>
+                <div class="mb-3">
+                  <label for="lastname" class="form-label">Фамилия</label>
+                  <input type="lastname" id="lastname" class="form-control" name="lastname" placeholder="Введите фамилию" required>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email</label>
+                  <input type="email" id="email" class="form-control" name="email" placeholder="Введите email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Введите пароль" required>
+                </div>
+              
+            </fieldset>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary text-black" data-bs-dismiss="modal">Закрыть</button>
+          <button href="#" type="submit" class="btn btn-primary text-black">Зарегистрироваться</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal" tabindex="-1" id="deleteConfirmModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Подтвердите удаление</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <p>Вы уверены, что хотите удалить эту запись?</p>
+                <input type="hidden" id="deleteEmail">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary text-black" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn btn-danger text-black" id="confirmDelete">Удалить</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" tabindex="-1" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать запись</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editingEmail">
+                <div class="mb-3">
+                    <label for="editName" class="form-label">Имя</label>
+                    <input type="text" class="form-control" id="editName">
+                </div>
+                <div class="mb-3">
+                    <label for="editLastname" class="form-label">Фамилия</label>
+                    <input type="text" class="form-control" id="editLastname">
+                </div>
+                <div class="mb-3">
+                    <label for="editEmail" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="editEmail">
+                </div>
+                <div class="mb-3">
+                    <label for="editPassword" class="form-label">Пароль</label>
+                    <input type="password" class="form-control" id="editPassword">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary text-black" data-bs-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary text-black" id="saveEdit">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+    <nav class="contaiter mx-auto p-8 w-full flex flex-row items-center">
+        <div class="w-1/3">
+          <h1 class="font-bold text-xl text-white">Филиппова Екатерина ПИ21-7</h1>
+          <h2 class="text-white">Тема: "t-7"</h2>
+        </div>
+        <div class="w-2/3">
+
+        </div>
+        <div class="btn-container w-1/5 flex flex-row justify-items-end text-center">
+             <!-- Button trigger modal -->
+             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#reg-modal">
+              Регистрация
+            </button>
+            
+            
+        </div>
+
+
+    </nav>
+
+  <div class="container mx-auto p-8">
+
+
+    
+    <legend class="text-center"></legend>
+      
+  
+      <div>
+        <h2 class="mt-4 mb-4 d-flex flex-column justify-content-center align-items-center text-white text-xl">Таблица пользователей</h2>
+        <table class="table" id="userTable">
+            <thead>
+              <tr>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Email</th>
+                <th scope="col">Редактирование</th>
+                <th scope="col">Удаление</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+  </div>
+</body>
+
+</html>
+
+<style>
+  body {
+    background: linear-gradient(174deg, #FFAF64 4.63%, #EB00FF 95.61%) no-repeat;
+    height: 100vh;
+    width: 100%;
+  }    
+
+  .btn-container {
+    display: flex;
+    justify-items: end;
+  }
+  .reg-btn {
+    padding: 5px 7px 5px 7px;
+    background-color: rgb(53, 53, 208);
+    border-radius: 10px;
+    color: white;
+  }
+</style>
