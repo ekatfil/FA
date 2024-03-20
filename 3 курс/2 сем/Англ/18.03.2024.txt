@@ -1,0 +1,56 @@
+Unit 6
+
+Task 17
+1) previously 
+2) eventually 
+3) following
+4) meantime
+5) contemporary
+6) simultaneous
+7) beginning
+8) before
+9) at the same time
+10) former 
+11) throughout 
+12) the time being
+
+Task 13
+C
+
+Task 14
+1) over
+2) аксесed
+3) интерпрайсес
+4) stored
+5) интерпрайсес
+6) дезастер
+7) archive
+8) оркитекчер
+9) малти тенси
+10) доминейтед
+11) файервол
+12) кастомизейшн
+13) фёрдпартис
+14) оркестрейшн
+15) эмплоймент
+
+Task 18
+Scaling challenges for a small software firm
+Contrasts between on-premise and cloud computing
+Introduction to pay-as-you-go cloud computing
+Cloud computing models: deployment and service
+Types of deployment models: public, private, hybrid cloud
+Major cloud service models: IaaS, PaaS, SaaS
+
+
+Task 19
+1. False
+2. False
+3. False
+4. False
+5. True
+6. False
+7. True
+8. True
+9. True
+10. True

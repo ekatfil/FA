@@ -1,0 +1,24 @@
+Unit 5
+
+Task 7
+1. FOTA - Firmware Over-the-Air(Облачное обновление)		b
+2. BLE - Bluetooth Low Energy(Bluetooth с низким энергопотреблением)	g
+3. M2M - Machine to machine(Машина к машине)	c
+4. 6LoWPAN - IPv6 over Low-Power Wireless Personal Area Networks(IPv6 через маломощные беспроводные персональные сети)	h
+5. NFC - Near Field Communication(связь ближнего радиуса действия)	a
+6. WSAN - Wireless Sensors And Actuators Network(Сеть беспроводных датчиков и исполнительных механизмов)	e
+7. GPRS - General Packet Radio Service(служба пакетной радиосвязи общего назначения)	i
+8. LTE-M - Long Term Evolution for Machines(долгосрочная эволюция машин)	j
+9. QoS - Quality of Service(качество обслуживания)	f
+10. RFID - Radio Frequency Identification(радиочастотная идентификация)	d
+
+
+Task 9
+1 gateway
+2 interoperability
+3 edge
+4 smart grid
+5 beacons
+6 geofencing
+7 FOTA
+8 LTE-M
