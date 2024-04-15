@@ -1,0 +1,41 @@
+Unit 6
+
+
+Task 24
+
+1) D +
+2) C +
+3) A +
+4) C +
+5) A +
+6) B +
+7) A +
+8) B +
+9) D +
+10) C +
+
+
+Task 25
+
+1) C
+2) A
+3) A
+4) B
+5) D
+6) B
+7) C
+8) A
+9) C
+10) D
+
+
+Task 28
+1) automated resilience
+2) spending
+3) query
+4) latency
+5) downtime
+6) self-service
+7) storage
+8) consistency
+
