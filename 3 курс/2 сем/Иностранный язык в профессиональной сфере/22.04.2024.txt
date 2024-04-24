@@ -1,0 +1,78 @@
+Unit 7
+_________________________________________________
+
+Task 3
+
+1) distinction - разница, отличие
+2) interrelated - взаимосвязанные
+3) necessitates - делать необходимым, нуждаться
+4) exceed - превосходить
+5) encompasses - включают в себя, охватывать
+6) explicitly - явно, точно, подробно
+7) predefined - предопределенный
+8) premise - суть; идея, лежащая в основе
+9) comprehend - понимать
+10) adhere - придерживаться
+11) intricate - сложный
+12) refine - совершенствовать
+
+a) interrelated
+b) adhere
+c) encompasses
+d) exceed
+e) intricate
+f) distinction
+g) explicitly
+h) necessitates
+i) premise
+j) comprehend
+k) refine
+l) predefined
+
+
+Task 4
+B
+
+conventional - традиционный
+
+
+Task 5
+
+1) B
+2) C
+3) D
+4) C
+5) C
+6) B
+7) D
+8) C
+9) B
+10) A
+
+
+Task 6
+
+1. f) Supervised Learning: A type of ML where the algorithm is trained on labeled data, associating input with the correct output.
+2. b) Unsupervised Learning: ML without labeled data; the algorithm discovers patterns and relationships on its own.
+3. e) Reinforcement Learning: A type of ML where an agent learns to make decisions in an environment by receiving feedback and rewards.
+4. g) Transfer Learning: Using pre-trained models as a starting point for new tasks to save training time.
+5. a) Deep Learning: A subfield of ML using neural networks with multiple layers to process and learn from data.
+6. d) Ensemble Learning: Combining multiple ML models to improve overall prediction accuracy.
+7. c) Batch Learning: Training an ML model using the entire dataset at once.
+
+
+Task 8
+1) f
+2) j
+3) b
+4) i
+5) d
+6) e
+7) g
+8) a
+9) c
+10) h
+
+
+
+
