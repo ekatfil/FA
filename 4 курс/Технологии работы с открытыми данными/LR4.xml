@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<yml_catalog date="2024-10-22T23:38+03:00">
+    <shop>
+        <name>Золотое Яблоко</name>
+        <company>ООО "Золотое Яблоко"</company>
+        <url>https://goldapple.ru/</url>
+        <phone>88007707021</phone>
+        <delivery-options>
+            <option cost="0" days="1-5" order-before="16"/>
+        </delivery-options>
+        <pickup-options>
+            <option cost="0" days="1-5" order-before="16"/>
+        </pickup-options>
+        <categories>
+            <category id="1">Женская косметика</category>
+            <category id="2">Мужская косметика</category>
+            <category id="3" parentId="1">Парфюмерия</category>
+            <category id="4" parentId="1">Уход</category>
+            <category id="5" parentId="1">Макияж</category>
+            <category id="6" parentId="2">Парфюмерия</category>
+            <category id="7" parentId="2">Уход</category>
+            <category id="8">Для дома</category>
+        </categories>
+        <offers>
+            <offer id="19000004549">
+                <url>https://goldapple.ru/19000004549-perfume-vanilla-blend</url>
+                <name>ZIELINSKI ROZEN black vanilla</name>
+                <categoryId>3</categoryId>
+                <price>2200</price>
+                <currencyId>RUB</currencyId>
+            </offer>
+            <offer id="19000215482">
+                <url>https://goldapple.ru/19000215482</url>
+                <name>TUMI continuum 12:00 gmt</name>
+                <categoryId>6</categoryId>
+                <price>6955</price>
+                <oldprice>10700</oldprice>
+                <currencyId>RUB</currencyId>
+            </offer>
+            <offer id="19000317569">
+                <url>https://goldapple.ru/19000317569-age-perfect-midnight</url>
+                <name>L'OREAL PARIS age perfect, midnight</name>
+                <categoryId>4</categoryId>
+                <price>1727</price>
+                <oldprice>1919</oldprice>
+                <currencyId>RUB</currencyId>
+            </offer>
+            <offer id="19000287147">
+                <url>https://goldapple.ru/19000287147-fermentation-eye-cream</url>
+                <name>BENTON fermentation eye cream</name>
+                <categoryId>7</categoryId>
+                <price>538</price>
+                <oldprice>1077</oldprice>
+                <currencyId>RUB</currencyId>
+            </offer>
+            <offer id="19000005513">
+                <url>https://goldapple.ru/19000005513-for-the-better-marker</url>
+                <name>RAD for the better marker</name>
+                <categoryId>5</categoryId>
+                <price>406</price>
+                <oldprice>580</oldprice>
+                <currencyId>RUB</currencyId>
+            </offer>
+            <offer id="19000089590">
+                <url>https://goldapple.ru/19000089590-vitaz-2-spal-nyj</url>
+                <name>Комплект постельного белья</name>
+                <categoryId>8</categoryId>
+                <price>2935</price>
+                <oldprice>3453</oldprice>
+                <currencyId>RUB</currencyId>
+            </offer>
+        </offers>
+    </shop>
+</yml_catalog>
